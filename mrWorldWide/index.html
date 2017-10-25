@@ -1,0 +1,193 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        .navbar{
+            height: 50px;
+            background-color: rgb(40,200,150);
+            padding:0px;
+            color:white;
+            border-radius:0px;
+        } 
+        .putCenter{
+            position: relative;
+            top: 50%;
+            left: 50%;
+            transform: translate(-55%, -50%);
+            display: inline-block;
+        }
+        #caption{
+            font-size: 18px;
+        }
+    </style>
+    <title></title>
+	<meta charset="utf-8" />
+</head>
+<body ng-app="travelApp">
+    <script>
+      window.fbAsyncInit = function() {
+        FB.init({
+          appId      : '1222853444476821',
+          xfbml      : true,
+          version    : 'v2.8'
+        });
+      };
+
+      (function(d, s, id){
+         var js, fjs = d.getElementsByTagName(s)[0];
+         if (d.getElementById(id)) {return;}
+         js = d.createElement(s); js.id = id;
+         js.src = "//connect.facebook.net/en_US/sdk.js";
+         fjs.parentNode.insertBefore(js, fjs);
+       }(document, 'script', 'facebook-jssdk'));
+    </script>
+    <div class="main" style="background-color: darkslategray; max-width:1800px; min-width:1000px" ng-controller="MainController">
+        <div class="col-md-12" style="background-color: rgb(240,240,250);">
+            <div class="row navbar">
+                <div class="col-md-4">
+                    <h3>MapMyLife <i class="fa fa-map"></i></h3>
+                </div>
+                <div class="col-md-6"></div>
+                <div class="col-md-2">
+                    <h4><i class="fa fa-user-circle"></i> {{user.first}} {{user.last}}</h4>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-1"></div>
+                <div class="col-md-10">
+                    <div class="col-md-12">
+                       <div id="map" style="width:100%; height:600px; margin-top:15px; border-radius: 5px">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-1"></div>
+            </div>
+            <div class="col-md-12" style="background-color:white; margin-top:25px;">
+                <h2 style="display: inline-block">Galleries <i class="fa fa-camera"></i></h2>
+                <button onclick="openNewPostModal();" button" class="btn btn-info" style="font-size:20px; background-color: rgb(40,200,150); border: none; position: absolute; right:20px; top:20px;">Create Post <i class="fa fa-pencil-square-o"></i></button>
+                <div class="col-md-12" ng-repeat="pin in pins">
+                    <div class="col-md-8">
+                        <h3><i class="fa fa-map-marker"  style="color:rgb(40,200,150);"></i> {{pin.city}}, {{pin.country}}</h3>
+                        <h5>{{pin.date | date}}</h5>
+                        <p>{{pin.text}}</p>
+                    </div>
+                    <div class="col-md-4">
+                       <center><img style="height:200px; margin-top: 20px; margin-bottom:5px;" ng-src="{{pin.icon}}" /></center>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12" style="background-color: rgb(240,240,250); color: black; height: 300px; border-top:3px dashed rgb(200,200,200)">
+            <p>Footer text goes here</p>
+            <center><button onclick="addFacebook()" >Test</button></center>
+        </div>
+
+    </div>
+    <!-- Post Map Modal -->
+    <div class="modal fade" id="myModal" role="dialog" style="max-width:1800px;" >
+        <div class="modal-dialog modal-lg">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title" id="modalLoc"></h4>
+                    <h5 id="modalDate"></h5>
+                </div>
+                <div class="modal-body" style="height:550px;">
+                    <i onclick="changePhoto(-1)" id="photoToggleLeft" class="fa fa-chevron-left" style="cursor: pointer; color: rgb(40,200,150); font-size: 48px; float: left; display: inline-block; margin-top:250px"></i>
+                    <i onclick="changePhoto(1)" id="photoToggleRight" class="fa fa-chevron-right" style="cursor: pointer; color: rgb(40,200,150); font-size: 48px; float: right; display: inline-block; margin-top: 250px"></i>
+
+                    <div class="putCenter">
+                           <center><img id="modalImage" src="" style="max-height:500px; max-width:650px; margin-top:10px; margin-bottom: 15px; display: inline-block;" /></center>
+                    </div>
+                    
+                </div>
+                <div class="modal-footer">
+                    <center><p id="caption"></p></center>
+                    <div class="fb-like"
+                         data-share="true"
+                         data-width="450"
+                         data-show-faces="true">
+                    </div>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- New Post Modal -->
+    <div class="modal fade" id="newPost" role="dialog" style="max-width:1800px">
+        <div class="modal-dialog modal-lg">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4>Create new post</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="col-md-12">
+                        <div class="col-md-6">
+                            <div class="input-group">
+                                <span class="input-group-addon" id="basic-addon1"><i class="fa fa-map-marker"></i></span>
+                                <input type="text" id="newPostCity" class="form-control" placeholder="City" aria-describedby="basic-addon1">
+                            </div>
+                            <div class="input-group" style="margin-top:5px;">
+                                <span class="input-group-addon" id="basic-addon2"><i class="fa fa-calendar"></i></span>
+                                <input type="text" id="newPostDate" class="form-control" placeholder="Date" aria-describedby="basic-addon2">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="input-group">
+                                <span class="input-group-addon" id="basic-addon1"><i class="fa fa-map-marker"></i></span>
+                                <input type="text" id="newPostCountry" class="form-control" placeholder="Country" aria-describedby="basic-addon1">
+                            </div>
+                            <div class="input-group" style="margin-top:5px;">
+                                <span class="input-group-addon" id="basic-addon1" ><i class="fa fa-photo"></i></span>
+                                <input type="text" id="newPostImage" class="form-control" placeholder="Image link" aria-describedby="basic-addon1">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label for="comment">New Post:</label>
+                            <textarea class="form-control" placeholder="Create your post!" rows="5" id="newPostText" style="max-width: 100%;"></textarea>
+                        </div>
+                        <!--<form method="post">
+                            <textarea id="mytextarea">Hello, World!</textarea>
+                        </form>-->
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" onclick="newPost()" ng-click="MainController.reload()" class="btn btn-primary" data-dismiss="modal">Save</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+</body>
+
+    
+</html>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA5qu-uA1aIWCW1XpGheVEZhXU-30b9vWY" async defer></script>
+<script src="scripts/angular.min.js"></script>
+<script src="app.js"></script>
+
+<!-- Controllers -->
+<script src="mainController.js"></script>
+<!-- Directives -->
+<script src="scripts/postModal.js"></script>
+
+<script src="map.js"></script>
+<script src="Facebook.js"></script>
+
+
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="css/font-awesome-4.7.0/css/font-awesome.min.css">

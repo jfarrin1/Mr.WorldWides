@@ -1,0 +1,41 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>Facebook Login JavaScript Example</title>
+    <meta charset="UTF-8">
+</head>
+<body>
+    <!--
+      Below we include the Login Button social plugin. This button uses
+      the JavaScript SDK to present a graphical Login button that triggers
+      the FB.login() function when clicked.
+    -->
+
+    <center style="position:absolute; top:45%; left: 45%;">
+        <fb:login-button scope="public_profile,email, user_friends, user_photos" onlogin="checkLoginState();" data-auto-logout-link="true">
+        </fb:login-button>
+        <!--<center><button onclick="getUserData()">Click to Get Data</button></center>-->
+        <div id="status">
+        </div>
+        <button onclick="changeURL()">View your Map</button>
+    </center>
+</body>
+</html>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA5qu-uA1aIWCW1XpGheVEZhXU-30b9vWY" async defer></script>
+<script src="scripts/angular.min.js"></script>
+<script src="app.js"></script>
+
+<!-- Controllers -->
+<script src="mainController.js"></script>
+<!-- Directives -->
+<script src="scripts/postModal.js"></script>
+
+<script src="map.js"></script>
+<script src="Facebook.js"></script>
+
+
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="css/font-awesome-4.7.0/css/font-awesome.min.css">
